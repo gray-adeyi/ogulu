@@ -29,22 +29,24 @@
           <div class="col-lg-6">
             <!-- ======= Send wish ======= -->
             <div class="contact">
-
-              <form action="forms/contact.php" method="post" role="form" class="php-email-form mt-4">
+                {% if wish_form.errors %}<div class="alert alert-danger">{{ wish_form.errors }}</div>{% endif %}
+              <form action="{% url 'core:index' %}" method="post" role="form" class="php-email-form mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="info" value="{{ wish_form.info.value }}">
                 <div class="row">
                   <div class="col-md-6 form-group">
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required {% if wish_form.name.value is not None %}value="{{ wish_form.name.value }}"{% endif %}>
                   </div>
                   <div class="col-md-6 form-group mt-3 mt-md-0">
                     <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
-                      required>
+                      required {% if wish_form.email.value is not None %}value="{{ wish_form.email.value }}"{% endif %}>
                   </div>
                 </div>
                 <div class="form-group mt-3">
-                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Relationship(e.g friend)" required>
+                  <input type="text" class="form-control" name="relationship" id="subject" placeholder="Relationship(e.g friend)" required {% if wish_form.relationship.value is not None %}value="{{ wish_form.relationship.value }}"{% endif %}>
                 </div>
                 <div class="form-group mt-3">
-                  <textarea class="form-control" name="message" rows="5" placeholder="birthday messages, wishes, prayers..." required></textarea>
+                  <textarea class="form-control" name="message" rows="5" placeholder="birthday messages, wishes, prayers..." required {% if wish_form.message.value is not None %}value="{{ wish_form.message.value }}"{% endif %}></textarea>
                 </div>
                 <div class="my-3">
                   <div class="loading">Loading</div>
@@ -73,77 +75,23 @@
       <h2>Birthday wishes and prayers from friends and families</h2>
     </div>
 
+    {% if site.my_info.wishes.all %}
     <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
       <div class="swiper-wrapper">
 
+        {% for wish in site.my_info.wishes.all %}
         <div class="swiper-slide">
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium
-              quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
+              {{ wish.message }}
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
-            <h3>Saul Goodman</h3>
-            <h4>Brother</h4>
+            <h3>{{ wish.name }}</h3>
+            <h4>{{ wish.relationship }}</h4>
           </div>
-        </div><!-- End testimonial item -->
-
-        <div class="swiper-slide">
-          <div class="testimonial-item">
-            <p>
-              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis
-              quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-            <h3>Sara Wilsson</h3>
-            <h4>Designer</h4>
-          </div>
-        </div><!-- End testimonial item -->
-
-        <div class="swiper-slide">
-          <div class="testimonial-item">
-            <p>
-              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor
-              labore quem eram duis noster aute amet eram fore quis sint minim.
-              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-            <h3>Jena Karlis</h3>
-            <h4>Store Owner</h4>
-          </div>
-        </div><!-- End testimonial item -->
-
-        <div class="swiper-slide">
-          <div class="testimonial-item">
-            <p>
-              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim
-              dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
-              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-            <h3>Matt Brandon</h3>
-            <h4>Freelancer</h4>
-          </div>
-        </div><!-- End testimonial item -->
-
-        <div class="swiper-slide">
-          <div class="testimonial-item">
-            <p>
-              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa
-              labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
-              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-            <h3>John Larson</h3>
-            <h4>Entrepreneur</h4>
-          </div>
-        </div><!-- End testimonial item -->
+        </div><!-- End wish item -->
+        {% endfor %}
 
       </div>
       <div class="swiper-pagination"></div>
@@ -151,7 +99,10 @@
 
     <div class="owl-carousel testimonials-carousel">
 
-    </div>
+    </div>  
+    {% else %}
+    <h3>No birthday wishes sent yet. Be the first</h3>
+    {% endif %}
 
   </div><!-- End Birthday wishes  -->
 

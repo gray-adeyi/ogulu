@@ -108,6 +108,25 @@
     <!-- Template Main JS File -->
     <script src="{% static 'core/js/main.js' %}"></script>
 
+    <!-- Notification script -->
+    <script src="{% static 'core/js/jquery.min.js' %}"></script>
+    <script src="{% static 'core/js/bootstrap-notify.js' %}"></script>
+    <script type="text/javascript">
+        function showNotification(a,e,color,icn,msg){
+            color=color,$.notify({icon:icn,message:msg},{type:color,timer:8e3,placement:{from:a,align:e}})}
+
+        $(document).ready(function() {
+          {% for message in messages %}
+          setTimeout(1000, showNotification(
+            'top',
+            'left',
+            "{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}",
+            "now-ui-icons travel_info",
+            '{{ message }}'));
+            {% endfor %}
+        });
+      </script>
+
 </body>
 
 </html>

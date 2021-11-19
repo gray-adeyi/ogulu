@@ -113,5 +113,9 @@ class SocialAccount(models.Model):
     link = models.URLField()
 
 
-class ResumeSummary(models.Model):
-    pass
+class BirthdayWish(models.Model):
+    info = models.ForeignKey(MyInformation, related_name='wishes', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    relationship = models.CharField(max_length=50)
+    message = models.TextField()
