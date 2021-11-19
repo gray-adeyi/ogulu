@@ -32,4 +32,14 @@ class TestModels(TestCase):
         expected_age = (datetime.date.today() - dob).days / 365
         self.assertEqual(expected_age, info.age)
 
+    def test_myinformation_model_is_birthday_logic_works(self):
+        site1 = models.Site.objects.create(name="Website1")
+        dob = datetime.date.today()
+        info = models.MyInformation.objects.create(site=site1,dob=dob)
+        self.assertEqual(info.age,0)
+        self.assertTrue(info.is_birthday())
+        # change birthday date to a day after dob
+        info.dob = info.dob + datetime.timedelta(days=1)
+        self.assertFalse(info.is_birthday())
+
 
