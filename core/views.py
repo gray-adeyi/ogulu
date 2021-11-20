@@ -1,9 +1,12 @@
+import logging
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from . import forms, models
 # Create your views here.
+
+logger = logging.getLogger(__name__)
 
 
 class Index(FormView):

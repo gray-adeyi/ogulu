@@ -1,5 +1,8 @@
 from django.db import models
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 
@@ -17,6 +20,7 @@ class Site(models.Model):
 
     def save(self, *args, **kwargs):
         if self.has_one_or_more_instance():
+            logger.info('`Site` already has an instance.')
             return
         super().save(*args, **kwargs)
 
@@ -119,3 +123,51 @@ class BirthdayWish(models.Model):
     email = models.EmailField()
     relationship = models.CharField(max_length=50)
     message = models.TextField()
+
+
+class Resume(models.Model):
+    info = models.OneToOneField(MyInformation, related_name='resume', on_delete=models.CASCADE)
+
+class Summary(models.Model):
+    """
+    Model hold the resume summary
+    """
+    resume = models.OneToOneField(Resume, on_delete=models.CASCADE, related_name='summary')
+    firstname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50)
+    resume_summary = models.TextField()
+    address = models.TextField(max_length=50)
+    phone_number = models.CharField(max_length=14)
+    email = models.EmailField()
+
+    def get_fullname(self):
+        return f"{self.firstname} {self.lastname}"
+
+
+class Education(models.Model):
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='educations')
+    degree_acquired = models.CharField(max_length=30)
+    duration = models.CharField(max_length=15, help_text="e.g 2019-2021")
+    institution = models.CharField(max_length=30)
+    brief_info = models.TextField(help_text="A brief summary of what the education acquired entailed")
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_on']
+
+class PersonalExperience(models.Model):
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='experiences')
+    job_title = models.CharField(max_length=30)
+    duration = models.CharField(max_length=15, help_text="e.g 2019-2021")
+    location = models.CharField(max_length=50)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_on']
+
+class Highlight(models.Model):
+    """
+    Stores highlights of personal experiences
+    """
+    experience = models.ForeignKey(PersonalExperience, on_delete=models.CASCADE, related_name='highlights')
+    highlight = models.CharField(max_length=200)
