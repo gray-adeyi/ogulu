@@ -117,7 +117,7 @@
 
       <div class="row">
         <div class="col-lg-12 d-flex justify-content-center">
-          <ul class="portfolio-flters">
+          <ul class="portfolio-flters" id="portfolio-flters">
             <li data-filter="*" class="filter-active">All</li>
             {% for category in picture_categories %}
             <li data-filter=".filter-{{ category.name | slugify }}">{{ category.name }}</li>
@@ -470,7 +470,7 @@
 
     <div class="row">
       <div class="col-lg-12 d-flex justify-content-center">
-        <ul class="portfolio-flters">
+        <ul class="portfolio-flters" id="photo-flters">
           <li data-filter="*" class="filter-active">All</li>
           {% if project_categories %}
           {% for category in project_categories %}

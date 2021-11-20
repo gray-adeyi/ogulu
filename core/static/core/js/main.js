@@ -198,9 +198,9 @@
     
       
 
-      let portfolioFilters = select('.portfolio-flters li', true);
+      let portfolioFilters = select('#portfolio-flters li', true);
 
-      on('click', '.portfolio-flters li', function(e) {
+      on('click', '#portfolio-flters li', function(e) {
         e.preventDefault();
         portfolioFilters.forEach(function(el) {
           el.classList.remove('filter-active');
@@ -221,9 +221,9 @@
     
       
 
-      let portfolioFilters = select('.portfolio-flters li', true);
+      let portfolioFilters = select('#photo-flters li', true);
 
-      on('click', '.portfolio-flters li', function(e) {
+      on('click', '#photo-flters li', function(e) {
         e.preventDefault();
         portfolioFilters.forEach(function(el) {
           el.classList.remove('filter-active');
