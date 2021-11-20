@@ -1,31 +1,44 @@
 {% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ project.name }}{% endblock %}
 
 {% block content %}
+
   <main id="main">
 
     <!-- ======= Portfolio Details ======= -->
     <div id="portfolio-details" class="portfolio-details">
       <div class="container">
 
+        <nav id="navbar" class="navbar mb-5">
+          <ul>
+              <li><a class="nav-link active" href="{% url 'core:index' %}#header">Home</a></li>
+              {% if site.my_info.is_birthday %}
+              <li><a class="nav-link" href="{% url 'core:index' %}#birthday">Birthday</a></li>
+              {% endif %}
+              <li><a class="nav-link" href="{% url 'core:index' %}#about">About</a></li>
+              <li><a class="nav-link" href="{% url 'core:index' %}#resume">Resume</a></li>
+              <li><a class="nav-link" href="{% url 'core:index' %}#services">Services</a></li>
+              <li><a class="nav-link" href="{% url 'core:index' %}#portfolio">Portfolio</a></li>
+              <li><a class="nav-link" href="{% url 'core:index' %}#contactx">Contact</a></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+
         <div class="row">
 
           <div class="col-lg-8">
-            <h2 class="portfolio-title">This is an example of portfolio detail</h2>
+            
+            <h2 class="portfolio-title">{{ project.name }}</h2>
 
             <div class="portfolio-details-slider swiper">
               <div class="swiper-wrapper align-items-center">
 
+                {% for image in project.images.all %}
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/portfolio-details-1.jpg" alt="">
+                  <img src="{{ image.image.url }}" alt="{{ project.name }}" class="img-fluid">
                 </div>
-
-                <div class="swiper-slide">
-                  <img src="assets/img/portfolio/portfolio-details-2.jpg" alt="">
-                </div>
-
-                <div class="swiper-slide">
-                  <img src="assets/img/portfolio/portfolio-details-3.jpg" alt="">
-                </div>
+                {% endfor %}
 
               </div>
               <div class="swiper-pagination"></div>
@@ -36,14 +49,15 @@
           <div class="col-lg-4 portfolio-info">
             <h3>Project information</h3>
             <ul>
-              <li><strong>Category</strong>: Web design</li>
-              <li><strong>Client</strong>: ASU Company</li>
+              <li><strong>{% if project.categories.all.count > 1%}Categories{% else %}Category{% endif %}</strong>: {% for category in project.categories.all %}{{ category.name | upper }}, {% endfor %}</li>
+              <li><strong>Client</strong>: {{ project.client }}</li>
               <li><strong>Project date</strong>: 01 March, 2020</li>
-              <li><strong>Project URL</strong>: <a href="#">www.example.com</a></li>
+              {% if project.url %}<li><strong>Project URL</strong>: <a href="{{ project.url }}">{{ project.url }}</a></li>{% endif %}
+              <li><strong>Status</strong>: {{ project.get_status_display }}</li>
             </ul>
 
             <p>
-              Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
+              {{ project.description }}
             </p>
           </div>
 

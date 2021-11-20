@@ -182,3 +182,47 @@ class Message(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=100)
     message = models.TextField()
+
+class PictureCategory(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "picture categories"
+
+class ProjectCategory(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "project categories"
+
+class Project(models.Model):
+    OPTIONS = (
+        ('completed','Completed'),
+        ('in_progress','In Progress')
+    )
+    info = models.ForeignKey(MyInformation, related_name='projects', on_delete=models.CASCADE)
+    categories = models.ManyToManyField(ProjectCategory)
+    name = models.CharField(max_length = 100)
+    client = models.CharField(max_length=50)
+    client_logo = models.ImageField(blank=True)
+    date = models.DateField()
+    status = models.CharField(max_length=15, choices=OPTIONS, default=OPTIONS[1][0])
+    url = models.URLField(blank=True)
+    description =models.TextField()
+    
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField()
+
+
+class MyImage(models.Model):
+    info = models.ForeignKey(MyInformation, related_name='pictures', on_delete=models.CASCADE)
+    categories = models.ManyToManyField(PictureCategory)
+    image = models.ImageField()
+    caption = models.CharField(max_length=100)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_on',]

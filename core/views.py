@@ -1,7 +1,7 @@
 import logging
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import FormView
 from . import forms, models
 # Create your views here.
@@ -17,6 +17,8 @@ class Index(FormView):
 
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
+        context['picture_categories'] = models.PictureCategory.objects.all()
+        context['project_categories'] = models.ProjectCategory.objects.all()
         try:
             context['wish_form'] = self.wish_form
         except:
@@ -51,3 +53,8 @@ class MessageView(FormView):
     def form_invalid(self, form):
         messages.success(self.request, f"An error occured!<br>{form.errors}<br>Try again.")
         return redirect('core:index')
+
+
+class Portfolio(DetailView):
+    template_name = 'core/portfolio-details.html'
+    model = models.Project
