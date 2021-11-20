@@ -187,8 +187,8 @@
    * Porfolio isotope and filter
    */
   window.addEventListener('load', () => {
-    let portfolioContainer = select('#photo-container');
-    let photoContainer = select('#portfolio-container');
+    let portfolioContainer = select('#portfolio-container');
+    let photoContainer = select('#photo-container');
 
     if (portfolioContainer) {
       let portfolioIsotope = new Isotope(portfolioContainer, {
@@ -221,11 +221,11 @@
     
       
 
-      let portfolioFilters = select('#photo-flters li', true);
+      let photoFilters = select('#photo-flters li', true);
 
       on('click', '#photo-flters li', function(e) {
         e.preventDefault();
-        portfolioFilters.forEach(function(el) {
+        photoFilters.forEach(function(el) {
           el.classList.remove('filter-active');
         });
         this.classList.add('filter-active');

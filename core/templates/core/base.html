@@ -11,8 +11,8 @@
     <meta content="{% block meta_keywords %}{% endblock %}" name="keywords">
 
     <!-- Favicons -->
-    <link href="{% static 'core/img/favicon.png' %}" rel="icon">
-    <link href="{% static 'core/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="{% if site.favicon %}{{ site.favicon.url }}{% else %}{% static 'core/img/favicon.png' %}{% endif %}" rel="icon">
+    <link href="{% if site.appleicon %}{{ site.appleicon.url }}{% else %}{% static 'core/img/apple-touch-icon.png' %}{% endif %}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link
@@ -33,7 +33,7 @@
         body::before {
             content: "";
             position: fixed;
-            background: #040404 url("{% static 'core/img/bg.jpg' %}") top right no-repeat;
+            background: #040404 url("{% if site.my_info.background_image %}{{ site.my_info.background_image.url }}{% else %}{% static 'core/img/illyria-default-lockscreen.jpg' %}{% endif %}") top right no-repeat;
             background-size: cover;
             left: 0;
             right: 0;

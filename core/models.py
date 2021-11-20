@@ -177,7 +177,7 @@ class Summary(models.Model):
         return f"{self.firstname} {self.lastname}"
 
     def __str__(self):
-        return self.resume.info.name
+        return self.get_fullname()
 
 
 class Education(models.Model):
