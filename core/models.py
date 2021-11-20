@@ -171,3 +171,14 @@ class Highlight(models.Model):
     """
     experience = models.ForeignKey(PersonalExperience, on_delete=models.CASCADE, related_name='highlights')
     highlight = models.CharField(max_length=200)
+
+
+class Message(models.Model):
+    """
+    Stores messages sent to `MyInformation` instance
+    """
+    info = models.ForeignKey(MyInformation, related_name='messages', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    subject = models.CharField(max_length=100)
+    message = models.TextField()

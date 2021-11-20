@@ -39,4 +39,15 @@ class Index(FormView):
         self.wish_form = form
         return self.get(self.request)
 
+
+class MessageView(FormView):
+    form_class = forms.MessageForm
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Message successfully sent!")
+        return redirect('core:index')
     
+    def form_invalid(self, form):
+        messages.success(self.request, f"An error occured!<br>{form.errors}<br>Try again.")
+        return redirect('core:index')
