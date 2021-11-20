@@ -15,8 +15,8 @@ class Site(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def has_one_or_more_instance(self):
-        return Site.objects.all().count() >= 1
+    def has_one_or_more_instance(self): # TODO: create a mixin that allows a model to have only one instance 
+        return Site.objects.all().count() > 1
 
     def save(self, *args, **kwargs):
         if self.has_one_or_more_instance():
@@ -44,8 +44,8 @@ class MyInformation(models.Model):
     bio = models.TextField(help_text='Some information about you')
     occupation = models.CharField(max_length=50, help_text="what you do for a living")
     quote = models.TextField(help_text='your favourite quote')
-    background_image = models.ImageField(help_text="The image that appears at the background of your site")
-    about_image = models.ImageField(help_text="The image that appears at the about")
+    background_image = models.ImageField(help_text="The image that appears at the background of your site", blank=True)
+    about_image = models.ImageField(help_text="The image that appears at the about", blank=True)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=20, help_text="Where you're based at the moment")
     degree = models.CharField(max_length=15, choices=OPTIONS)
@@ -65,8 +65,14 @@ class MyInformation(models.Model):
         """
         today = datetime.date.today()
         return (today.day == self.dob.day) and (today.month == self.dob.month)
+    
+    def has_one_or_more_instance(self): # TODO: create a mixin that allows a model to have only one instance 
+        return MyInformation.objects.all().count() > 1
 
     def save(self, *args, **kwargs):
+        if self.has_one_or_more_instance():
+            logger.info('`MyInformation` already has an instance.')
+            return
         self.age = self.get_age()
         super().save(*args, **kwargs)
 
@@ -117,7 +123,7 @@ class PhoneNumber(models.Model):
 
 class Email(models.Model):
     info = models.ForeignKey(MyInformation, related_name='emails', on_delete=models.CASCADE)
-    email = models.CharField(max_length=15)
+    email = models.EmailField(max_length=15)
 
     def __str__(self):
         return self.email
