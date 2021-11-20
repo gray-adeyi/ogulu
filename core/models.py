@@ -123,7 +123,7 @@ class PhoneNumber(models.Model):
 
 class Email(models.Model):
     info = models.ForeignKey(MyInformation, related_name='emails', on_delete=models.CASCADE)
-    email = models.EmailField(max_length=15)
+    email = models.EmailField()
 
     def __str__(self):
         return self.email
