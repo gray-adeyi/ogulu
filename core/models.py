@@ -40,7 +40,7 @@ class MyInformation(models.Model):
     nickname = models.CharField(max_length=50)
     display_text = models.TextField(max_length=200, help_text='What text should appear on your site\'s landing page', default="The <span>top</span> feels so much better than the bottom.")
     dob = models.DateField('Date of birth')
-    age = models.PositiveIntegerField(blank=True)
+    age = models.PositiveIntegerField(blank=True, help_text="leave empty. it is automatically generated")
     bio = models.TextField(help_text='Some information about you')
     occupation = models.CharField(max_length=50, help_text="what you do for a living")
     quote = models.TextField(help_text='your favourite quote')
@@ -77,15 +77,24 @@ class Interest(models.Model):
     info = models.ForeignKey(MyInformation, related_name='interests', on_delete=models.CASCADE)
     interest = models.CharField(max_length=100, help_text="things that you're attracted to")
 
+    def __str__(self):
+        return self.interest
+
 class Service(models.Model):
     info = models.ForeignKey(MyInformation, related_name='services', on_delete=models.CASCADE)
     name = models.CharField(max_length=100, help_text="name of the service you're providing")
     description = models.CharField(max_length=100, help_text="brief info of what the service is about")
 
+    def __str__(self):
+        return self.name
+
 class Skill(models.Model):
     info = models.ForeignKey(MyInformation, related_name='skills', on_delete=models.CASCADE)
     name = models.CharField(max_length=100, help_text="the name of the skill")
     proficiency = models.PositiveIntegerField(help_text="how good you are at doing it in percentage(Note: Do not include `%`)")
+
+    def __str__(self):
+        return self.name
 
 class Testimonial(models.Model):
     """
@@ -96,13 +105,22 @@ class Testimonial(models.Model):
     occupation = models.CharField(max_length=50)
     testimony = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 class PhoneNumber(models.Model):
     info = models.ForeignKey(MyInformation, related_name='phone_numbers', on_delete=models.CASCADE)
     number = models.CharField(max_length=15)
 
+    def __str__(self):
+        return self.number
+
 class Email(models.Model):
     info = models.ForeignKey(MyInformation, related_name='emails', on_delete=models.CASCADE)
     email = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.email
 
 class SocialAccount(models.Model):
     OPTIONS = (
@@ -116,6 +134,9 @@ class SocialAccount(models.Model):
     name = models.CharField(max_length=15, choices=OPTIONS)
     link = models.URLField()
 
+    def __str__(self):
+        return self.get_name_display()
+
 
 class BirthdayWish(models.Model):
     info = models.ForeignKey(MyInformation, related_name='wishes', on_delete=models.CASCADE)
@@ -124,9 +145,15 @@ class BirthdayWish(models.Model):
     relationship = models.CharField(max_length=50)
     message = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 
 class Resume(models.Model):
     info = models.OneToOneField(MyInformation, related_name='resume', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.info.firstname
 
 class Summary(models.Model):
     """
@@ -143,6 +170,9 @@ class Summary(models.Model):
     def get_fullname(self):
         return f"{self.firstname} {self.lastname}"
 
+    def __str__(self):
+        return self.resume.info.name
+
 
 class Education(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='educations')
@@ -154,8 +184,11 @@ class Education(models.Model):
 
     class Meta:
         ordering = ['-created_on']
+    
+    def __str__(self):
+        return self.degree_acquired
 
-class PersonalExperience(models.Model):
+class ProfessionalExperience(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='experiences')
     job_title = models.CharField(max_length=30)
     duration = models.CharField(max_length=15, help_text="e.g 2019-2021")
@@ -164,13 +197,19 @@ class PersonalExperience(models.Model):
 
     class Meta:
         ordering = ['-created_on']
+    
+    def __str__(self):
+        return self.job_title
 
 class Highlight(models.Model):
     """
     Stores highlights of personal experiences
     """
-    experience = models.ForeignKey(PersonalExperience, on_delete=models.CASCADE, related_name='highlights')
+    experience = models.ForeignKey(ProfessionalExperience, on_delete=models.CASCADE, related_name='highlights')
     highlight = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.highlight
 
 
 class Message(models.Model):
@@ -182,6 +221,10 @@ class Message(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=100)
     message = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 class PictureCategory(models.Model):
     name = models.CharField(max_length=50)
@@ -190,12 +233,18 @@ class PictureCategory(models.Model):
     class Meta:
         verbose_name_plural = "picture categories"
 
+    def __str__(self):
+        return self.name
+
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=50)
     description = models.TimeField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "project categories"
+
+    def __str__(self):
+        return self.name
 
 class Project(models.Model):
     OPTIONS = (
@@ -211,10 +260,16 @@ class Project(models.Model):
     status = models.CharField(max_length=15, choices=OPTIONS, default=OPTIONS[1][0])
     url = models.URLField(blank=True)
     description =models.TextField()
+
+    def __str__(self):
+        return self.name
     
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField()
+
+    def __str__(self):
+        return self.project.name
 
 
 class MyImage(models.Model):
@@ -226,3 +281,6 @@ class MyImage(models.Model):
 
     class Meta:
         ordering = ['-created_on',]
+
+    def __str__(self):
+        return self.image
