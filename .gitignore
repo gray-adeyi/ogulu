@@ -1,0 +1,4 @@
+db.sqlite3
+envars.zsh
+*.pyc
+media
