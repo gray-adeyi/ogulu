@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 pillow = "*"
+boto3 = "*"
+django-storages = "*"
+django-heroku = "*"
+gunicorn = "*"
 
 [dev-packages]
 autopep8 = "*"
