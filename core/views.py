@@ -19,6 +19,7 @@ class Index(FormView):
         context =  super().get_context_data(**kwargs)
         context['picture_categories'] = models.PictureCategory.objects.all()
         context['project_categories'] = models.ProjectCategory.objects.all()
+        context['transaction_form'] = forms.TransactionFrom()
         try:
             context['wish_form'] = self.wish_form
         except:

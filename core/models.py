@@ -290,3 +290,23 @@ class MyImage(models.Model):
 
     def __str__(self):
         return self.image
+
+
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +   Models For payments
+# +
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Transation(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    transaction_id = models.UUIDField(auto_created=True)
+    amount = models.DecimalField(max_digits=9, decimal_places=2)
+    is_verified = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.transaction_id

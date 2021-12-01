@@ -11,3 +11,13 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = models.Message
         fields = '__all__'
+
+class TransactionFrom(forms.ModelForm):
+    class Meta:
+        model = models.Transation
+        fields = [
+            'name',
+            'transaction_id',
+            'email',
+            'amount',
+        ]
