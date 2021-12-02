@@ -206,5 +206,15 @@ else:
     DEFAULT_FILE_STORAGE = 'ogulu.storage_backends.MediaStorage'
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
+
+# Paystack configs
+if DEBUG:
+    PAYSTACK_SECRET_KEY= os.environ.get("PAYSTACK_TEST_SECRET_KEY")
+    PAYSTACK_PUBLIC_KEY= os.environ.get("PAYSTACK_TEST_PUBLIC_KEY")
+else:
+    PAYSTACK_SECRET_KEY= os.environ.get("PAYSTACK_SECRET_KEY")
+    PAYSTACK_PUBLIC_KEY= os.environ.get("PAYSTACK_PUBLIC_KEY")
+
+
 # Activate Django-Heroku.
 django_heroku.settings(locals())
