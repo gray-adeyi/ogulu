@@ -59,29 +59,7 @@
           </div>
           <div class="col-lg-6">
             <h5>You can also send flex money ooo. any amount is allowed! 😂😂😋</h5>
-            <a href="" class="btn btn-success">Send cash</a>
-            <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendCashModal">
-  Send Money
-</button>
-            <!-- Modal -->
-<div class="modal fade" id="sendCashModal" tabindex="-1" aria-labelledby="sendCashModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="sendCashModalLabel">Send Money</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {{ transacton_form.as_p }}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+            <a href="{% url 'core:send-money' %}" class="btn btn-success">Send cash</a>
           </div>
         </div>
       </div>

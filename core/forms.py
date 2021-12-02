@@ -14,10 +14,9 @@ class MessageForm(forms.ModelForm):
 
 class TransactionFrom(forms.ModelForm):
     class Meta:
-        model = models.Transation
+        model = models.Transaction
         fields = [
             'name',
-            'transaction_id',
             'email',
             'amount',
         ]

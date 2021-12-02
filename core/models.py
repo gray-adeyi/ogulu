@@ -1,6 +1,9 @@
 from django.db import models
+import uuid
 import datetime
 import logging
+from pypaystack import Transaction as PSTransaction
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -301,12 +304,21 @@ class MyImage(models.Model):
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class Transation(models.Model):
+class Transaction(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    transaction_id = models.UUIDField(auto_created=True)
+    transaction_id = models.UUIDField(default=uuid.uuid4, editable=False)
     amount = models.DecimalField(max_digits=9, decimal_places=2)
-    is_verified = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return self.transaction_id
+        return self.email
+
+    def verify_payment(self):
+        transaction = PSTransaction(authorization_key=settings.PAYSTACK_SECRET_KEY)
+        status_code, status, message, data = transaction.verify(self.transaction_id)
+        logger.info(f"{status_code} {status} {message} {data}")
+        if status_code == 200:
+            logger.info(message)
+            self.is_verified = True
+            self.save()

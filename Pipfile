@@ -10,6 +10,8 @@ boto3 = "*"
 django-storages = "*"
 django-heroku = "*"
 gunicorn = "*"
+pypaystack = "*"
+requests = "*"
 
 [dev-packages]
 

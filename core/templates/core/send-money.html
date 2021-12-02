@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<br><br><br>
+
+<div class="container">
+
+    <nav id="navbar" class="navbar mb-5">
+        <ul>
+            <li><a class="nav-link active" href="{% url 'core:index' %}#header">Home</a></li>
+            {% if site.my_info.is_birthday %}
+            <li><a class="nav-link" href="{% url 'core:index' %}#birthday">Birthday</a></li>
+            {% endif %}
+            <li><a class="nav-link" href="{% url 'core:index' %}#about">About</a></li>
+            <li><a class="nav-link" href="{% url 'core:index' %}#resume">Resume</a></li>
+            <li><a class="nav-link" href="{% url 'core:index' %}#services">Services</a></li>
+            <li><a class="nav-link" href="{% url 'core:index' %}#portfolio">Portfolio</a></li>
+            <li><a class="nav-link" href="{% url 'core:index' %}#contactx">Contact</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            {% if send_money %}
+            <div class="card" style="width: 20rem;">
+                <div class="card-body text-black">
+                    <h5 class="card-title">Send Money</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Any amount you send goes a long way.</h6>
+                    <form action="{% url 'core:send-money' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Email</span>
+                            <input type="text" class="form-control" name="email">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">₦</span>
+                            <input type="text" class="form-control" aria-label="Amount (to the nearest naira)"
+                                name="amount">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                        <button type="submit" class="btn btn-success">continue</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            {% if pay_confirm %}
+            <div class="card" style="width: 20rem;">
+                <div class="card-body text-black">
+                    {% if transaction.is_verified %}
+                    <h5 class="card-title">Payment has been confirmed, may you purse never run dry. Amen.</h5>
+                    {% else %}
+                    <h5 class="card-title">Confirm & Pay</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Osheyy alert ti fe wole. 😋🤑🤑</h6>
+                    <p><b>Name</b> {{ transaction.name }}</p>
+                    <p><b>Email</b> {{ transaction.email }}</p>
+                    <p><b>Amount</b> ₦{{ transaction.amount }}</p>
+                    <button class="btn btn-success" id="payButton">Pay</button>
+                    <p style="font-size: smaller; color: red;">Sorry, please refesh this page after payments to verify their success. This won't happen again because we're working on it.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script>
+    const payButton = document.getElementById('payButton');
+    payButton.addEventListener("click", payWithPaystack, false);
+    function payWithPaystack(e) {
+        e.preventDefault();
+        let handler = PaystackPop.setup({
+            key: "{{ paystack_public_key }}", 
+            email: "{{ transaction.email }}",
+            amount: {{ transaction.amount }} * 100,
+            ref: "{{ transaction.transaction_id }}", 
+            
+            onClose: function () {
+                console.log('Window closed.');
+            },
+            callback: function (response) {
+                document.location.reload(true); // true to force reload from server
+            }
+        });
+        handler.openIframe();
+    }
+</script>
+{% endblock %}

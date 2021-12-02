@@ -1,7 +1,11 @@
 import logging
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.conf import settings
+from django.http import HttpResponse
 from django.contrib import messages
 from django.views.generic import TemplateView, DetailView
+from typing import Dict, Any
 from django.views.generic.edit import FormView
 from . import forms, models
 # Create your views here.
@@ -19,7 +23,7 @@ class Index(FormView):
         context =  super().get_context_data(**kwargs)
         context['picture_categories'] = models.PictureCategory.objects.all()
         context['project_categories'] = models.ProjectCategory.objects.all()
-        context['transaction_form'] = forms.TransactionFrom()
+        
         try:
             context['wish_form'] = self.wish_form
         except:
@@ -54,6 +58,45 @@ class MessageView(FormView):
     def form_invalid(self, form):
         messages.success(self.request, f"An error occured!<br>{form.errors}<br>Try again.")
         return redirect('core:index')
+
+
+class SendMoney(FormView):
+    form_class = forms.TransactionFrom
+    template_name = 'core/send-money.html'
+
+    def form_valid(self, form: forms.TransactionFrom) -> HttpResponse:
+        transaction = form.save()
+        messages.success(self.request, "New Transaction created!")
+        return redirect(reverse('core:pay-confirm', kwargs={"pk": transaction.pk}))
+
+    def form_invalid(self, form: forms.TransactionFrom) -> HttpResponse:
+        messages.error(self.request, "Unabel to created new transaction")
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['send_money'] = True
+        return context
+
+
+class PayConfrim(DetailView):
+
+    template_name = 'core/send-money.html'
+    context_object_name = 'transaction'
+    model = models.Transaction
+
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        transaction = models.Transaction.objects.get(pk=self.kwargs['pk'])
+        transaction.verify_payment()
+        context = super().get_context_data(**kwargs)
+        context['context'] = transaction
+        context['pay_confirm'] = True
+        context['paystack_public_key'] = settings.PAYSTACK_PUBLIC_KEY
+        return context
+
+def bounce(request, pk):
+    return redirect(reverse('core:pay-confrim', kwargs={'pk': pk}))
 
 
 class Portfolio(DetailView):

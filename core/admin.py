@@ -152,3 +152,8 @@ class MyImageAdmin(admin.ModelAdmin):
         'categories',
     ]
     
+
+
+@admin.register(models.Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    pass
