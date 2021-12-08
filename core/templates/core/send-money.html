@@ -19,7 +19,7 @@
             <li><a class="nav-link" href="{% url 'core:index' %}#contactx">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
+    </nav><!-- .navbar -->
 
     <div class="row">
         <div class="col-3"></div>
@@ -62,7 +62,8 @@
                     <p><b>Email</b> {{ transaction.email }}</p>
                     <p><b>Amount</b> ₦{{ transaction.amount }}</p>
                     <button class="btn btn-success" id="payButton">Pay</button>
-                    <p style="font-size: smaller; color: red;">Sorry, please refesh this page after payments to verify their success. This won't happen again because we're working on it.</p>
+                    <p style="font-size: smaller; color: red;">Sorry, please refesh this page after payments to verify
+                        their success. This won't happen again because we're working on it.</p>
                     {% endif %}
                 </div>
             </div>
@@ -82,19 +83,19 @@
     function payWithPaystack(e) {
         e.preventDefault();
         let handler = PaystackPop.setup({
-            key: "{{ paystack_public_key }}", 
+            key: "{{ paystack_public_key }}",
             email: "{{ transaction.email }}",
             amount: {{ transaction.amount }} * 100,
-            ref: "{{ transaction.transaction_id }}", 
-            
-            onClose: function () {
-                console.log('Window closed.');
-            },
-            callback: function (response) {
-                document.location.reload(true); // true to force reload from server
-            }
+                ref: "{{ transaction.transaction_id }}",
+
+                    onClose: function () {
+                        console.log('Window closed.');
+                    },
+    callback: function (response) {
+        document.location.reload(true); // true to force reload from server
+    }
         });
-        handler.openIframe();
+    handler.openIframe();
     }
 </script>
 {% endblock %}
