@@ -59,7 +59,7 @@
           </div>
           <div class="col-lg-6">
             <h5>You can also send flex money ooo. any amount is allowed! 😂😂😋</h5>
-            <a href="{% url 'core:send-money' %}" class="btn btn-success">Send cash</a>
+            <a href="{% url 'core:send-money' %}" class="btn btn-success">Send money</a>
           </div>
         </div>
       </div>
@@ -358,6 +358,60 @@
   </div><!-- End Testimonials  -->
 
 </section><!-- End About Section -->
+
+
+<!-- ======= Gallery Section ======= -->
+<section id="gallery" class="about">
+
+  <!-- ======= Gallery ======= -->
+  <div class="portfolio">
+    <div class="container">
+
+      <div class="section-title">
+        <h2></h2>
+        <p>Picture Gallery</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 d-flex justify-content-center">
+          <ul class="portfolio-flters" id="photo-flters">
+            <li data-filter="*" class="filter-active">All</li>
+            {% for category in picture_categories %}
+            <li data-filter=".filter-{{ category.name | slugify }}">{{ category.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="row portfolio-container" id="photo-container">
+
+        {% if site.my_info.pictures.all %}
+        {% for picture in site.my_info.pictures.all %}
+        <div class="col-lg-4 col-md-6 portfolio-item {% for category in picture.categories.all %}filter-{{ category.name | slugify }} {% endfor %}">
+          <div class="portfolio-wrap">
+            <img src="{{ picture.image.url }}" class="img-fluid" alt="{{ picture.caption }}">
+            <div class="portfolio-info">
+              <h4></h4>
+              <p>{% for category in picture.categories.all %}{{ category.name }}, {% endfor %}</p>
+              <div class="portfolio-links">
+                <a href="{{ picture.image.url }}" data-gallery="portfolioGallery"
+                  class="portfolio-lightbox" title="{{ picture.caption }}"><i class="bx bx-plus"></i></a>
+              </div>
+              <a href="{{ picture.image.url }}" download="download">Download</a>
+      
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+
+      </div>
+
+    </div>
+  </div><!-- End Gallery pictures -->
+
+</section><!-- End Gallery Section -->
+{% endif %}
 
 <!-- ======= Resume Section ======= -->
 <section id="resume" class="resume">
