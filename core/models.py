@@ -237,7 +237,7 @@ class Message(models.Model):
 
 class PictureCategory(models.Model):
     name = models.CharField(max_length=50)
-    description = models.TimeField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "picture categories"
@@ -247,7 +247,7 @@ class PictureCategory(models.Model):
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=50)
-    description = models.TimeField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "project categories"
@@ -285,14 +285,14 @@ class MyImage(models.Model):
     info = models.ForeignKey(MyInformation, related_name='pictures', on_delete=models.CASCADE)
     categories = models.ManyToManyField(PictureCategory)
     image = models.ImageField()
-    caption = models.CharField(max_length=100)
+    caption = models.CharField(max_length=100, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_on',]
 
     def __str__(self):
-        return self.image
+        return self.image.name
 
 
 
@@ -310,6 +310,7 @@ class Transaction(models.Model):
     transaction_id = models.UUIDField(default=uuid.uuid4, editable=False)
     amount = models.DecimalField(max_digits=9, decimal_places=2)
     is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.email
