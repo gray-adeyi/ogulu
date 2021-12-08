@@ -156,4 +156,7 @@ class MyImageAdmin(admin.ModelAdmin):
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        "email",
+        "is_verified"
+    ]
