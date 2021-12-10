@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://damsky.herokuapp.com',]
+ALLOWED_HOSTS = ['https://raji.herokuapp.com',]
 
 
 # Application definition
@@ -84,24 +84,6 @@ if DEBUG:
             'NAME': BASE_DIR / 'db.sqlite3',
             }
         }
-else:
-    DATABASES = {
-        'default': {
-
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-            'NAME': os.environ['DB_DATABASE'],
-
-            'USER': os.environ['DB_USER'],
-
-            'PASSWORD': os.environ['DB_PASSWORD'],
-
-            'HOST': os.environ['DB_HOST'],
-
-            'PORT': int(os.environ['DB_PORT']),
-
-                }
-            }
 
 
 # Password validation
