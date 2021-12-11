@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from . import models
 
-admin.AdminSite.site_header = "Oluwadamilola's website administration"
+admin.AdminSite.site_header = "Raji's website administration"
 admin.AdminSite.index_title = "With great power, comes great responsibility"
 
 # Register your models here.
